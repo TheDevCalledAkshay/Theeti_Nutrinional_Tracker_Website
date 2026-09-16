@@ -1,5 +1,7 @@
 # Theeti
 
+WEBSITE LINK : https://thedevcalledakshay.github.io/Theeti_Nutrinional_Tracker_Website/
+
 **Eat. Train. Repeat. Simple. No bullshit.**
 
 Theeti is a personal nutrition tracking web app built to make tracking daily food intake simple, fast, and accessible.
