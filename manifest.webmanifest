@@ -1,0 +1,16 @@
+{
+  "name": "Theeti — Calorie & Macro Tracker",
+  "short_name": "Theeti",
+  "description": "A private calorie and macro tracker.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#065f46",
+  "background_color": "#faf6ec",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

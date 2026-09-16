@@ -281,3 +281,9 @@ body {
   .summary-cal { font-size: 1.9rem; }
 }
 
+/* ---------- installed PWA (standalone mode) ---------- */
+@media (display-mode: standalone) {
+  .app-header { padding-top: calc(22px + env(safe-area-inset-top)); }
+  .container { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
+}
+
