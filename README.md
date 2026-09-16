@@ -27,17 +27,7 @@ No complicated setup. Just enter what you ate and let Theeti do the math.
 
 ## How to Run
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/TheDevCalledAkshay/Theeti.git
-   ```
-
-2. Open the project folder.
-
-3. Open `index.html` in your browser.
-
-That's it. No backend server required for the basic application.
+Click this website link: https://thedevcalledakshay.github.io/Theeti_Nutrinional_Tracker_Website/
 
 ## Project Status
 
