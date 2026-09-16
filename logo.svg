@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Theeti — bowl with sprouting leaves -->
+  <rect width="200" height="200" rx="40" fill="#faf6ec"/>
+  <!-- large leaf (right) -->
+  <path d="M103 82 C101 44 128 20 166 16 C168 52 140 78 107 82 Z" fill="#8ba888"/>
+  <!-- small leaf (left) -->
+  <path d="M95 82 C90 56 72 44 50 44 C55 66 74 80 93 82 Z" fill="#8ba888"/>
+  <!-- bowl -->
+  <path d="M30 92 C30 138 62 166 101 166 C140 166 172 138 172 92 Q173 85 164 85 L38 85 Q29 85 30 92 Z" fill="#2e4234"/>
+  <!-- bowl highlight -->
+  <path d="M148 100 C148 126 132 146 116 153" stroke="#faf6ec" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <!-- wordmark -->
+  <text x="101" y="196" text-anchor="middle" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="700" fill="#2e4234">Theeti</text>
+</svg>

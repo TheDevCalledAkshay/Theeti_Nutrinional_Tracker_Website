@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theeti — Calorie &amp; Macro Tracker</title>
+  <link rel="icon" type="image/svg+xml" href="logo.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== Login / Register screen ===== -->
+  <div class="auth-screen hidden" id="authScreen">
+    <div class="auth-card">
+      <img src="logo.svg" alt="Theeti" class="auth-logo" />
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-auth="login">Log in</button>
+        <button type="button" class="auth-tab" data-auth="register">Register</button>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <label>Email
+          <input type="email" id="loginEmail" placeholder="you@example.com" required />
+        </label>
+        <label>Password
+          <input type="password" id="loginPassword" placeholder="Your password" required />
+        </label>
+        <button type="submit" class="btn primary auth-btn">Log in</button>
+      </form>
+      <form id="registerForm" autocomplete="off" class="hidden">
+        <label>Name
+          <input type="text" id="regName" placeholder="Your name" required />
+        </label>
+        <label>Email
+          <input type="email" id="regEmail" placeholder="you@example.com" required />
+        </label>
+        <label>Password
+          <input type="password" id="regPassword" placeholder="At least 6 characters" minlength="6" required />
+        </label>
+        <label>Confirm password
+          <input type="password" id="regConfirm" placeholder="Repeat password" required />
+        </label>
+        <button type="submit" class="btn primary auth-btn">Create account</button>
+      </form>
+      <p class="auth-error hidden" id="authError"></p>
+      <p class="muted auth-note">Accounts are stored only in this browser — your food log stays private to your account.</p>
+    </div>
+  </div>
+
+  <!-- ===== App (hidden until logged in) ===== -->
+  <div class="hidden" id="appShell">
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-row">
+        <img src="logo.svg" alt="Theeti" class="brand-logo" />
+        <div class="user-chip">
+          <span id="userName"></span>
+          <button class="btn small" id="logoutBtn">Log out</button>
+        </div>
+      </div>
+      <p class="tagline">Eat. Train. Repeat. Simple. No bullshit. — Akshay</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Summary card -->
+    <section class="card summary-card">
+      <div class="summary-top">
+        <div>
+          <span class="summary-label" id="summaryDateLabel">Today</span>
+          <h2 class="summary-cal"><span id="summaryCalories">0</span> <span class="unit">kcal</span></h2>
+        </div>
+        <div class="summary-remaining ok" id="summaryRemaining">—</div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="macro-row">
+        <div class="macro"><span class="macro-dot protein"></span>Protein <b id="sumProtein">0g</b></div>
+        <div class="macro"><span class="macro-dot carbs"></span>Carbs <b id="sumCarbs">0g</b></div>
+        <div class="macro"><span class="macro-dot fat"></span>Fat <b id="sumFat">0g</b></div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="today">＋ Add Food</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="analytics">Analytics</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <!-- Today panel -->
+    <section class="tab-panel" id="panel-today">
+      <section class="card">
+        <h3>Add what you ate</h3>
+        <p class="muted form-hint">💡 Start typing a food and pick a match — Theeti fills in calories &amp; macros from its built-in food list and the USDA FoodData Central database. Edit any number before adding, or just type everything yourself.</p>
+        <form id="addForm" autocomplete="off">
+          <div class="form-grid">
+            <label>Date
+              <input type="date" id="fDate" required />
+            </label>
+            <label>Meal
+              <select id="fMeal">
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+            </label>
+            <label class="span3">Food name
+              <div class="suggest-wrap">
+                <input type="text" id="fName" placeholder="Start typing — e.g. Egg, Chicken..." autocomplete="off" required />
+                <ul class="suggest-list hidden" id="suggestList"></ul>
+              </div>
+            </label>
+            <label>Amount
+              <div class="qty-group">
+                <input type="number" id="fQuantity" min="0" step="any" placeholder="100" />
+                <select id="fUnit">
+                  <option value="g">g</option>
+                  <option value="pcs">pcs</option>
+                </select>
+              </div>
+            </label>
+            <label>Calories (kcal)
+              <input type="number" id="fCal" min="1" step="1" placeholder="520" required />
+            </label>
+            <label>Protein (g)
+              <input type="number" id="fProtein" min="0" step="0.1" placeholder="optional" />
+            </label>
+            <label>Carbs (g)
+              <input type="number" id="fCarbs" min="0" step="0.1" placeholder="optional" />
+            </label>
+            <label>Fat (g)
+              <input type="number" id="fFat" min="0" step="0.1" placeholder="optional" />
+            </label>
+          </div>
+          <p class="source-note" id="sourceNote"></p>
+          <button type="submit" class="btn primary">＋ Add food</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="list-head">
+          <h3 id="todayListTitle">Today's food</h3>
+          <span class="muted" id="todayCount"></span>
+        </div>
+        <ul class="entry-list" id="todayList"></ul>
+      </section>
+    </section>
+
+    <!-- History panel -->
+    <section class="tab-panel hidden" id="panel-history">
+      <section class="card">
+        <h3>History</h3>
+        <p class="muted">All the days you've logged, newest first. Tap a day to expand it.</p>
+        <div id="historyList"></div>
+      </section>
+    </section>
+
+    <!-- Analytics panel -->
+    <section class="tab-panel hidden" id="panel-analytics">
+      <section class="card">
+        <h3>Overview</h3>
+        <div class="stat-grid" id="statGrid"></div>
+      </section>
+
+      <section class="card">
+        <h3>Calories — last 14 days</h3>
+        <div class="chart-wrap"><canvas id="barChart" height="260"></canvas></div>
+        <p class="muted" id="barChartNote"></p>
+      </section>
+
+      <section class="card">
+        <h3>Average macros — last 7 days</h3>
+        <div class="chart-split">
+          <div class="chart-wrap donut"><canvas id="donutChart" width="220" height="220"></canvas></div>
+          <ul class="legend" id="donutLegend"></ul>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Top foods — last 30 days</h3>
+        <ol class="top-foods" id="topFoods"></ol>
+      </section>
+    </section>
+
+    <!-- Settings panel -->
+    <section class="tab-panel hidden" id="panel-settings">
+      <section class="card">
+        <h3>Daily calorie goal</h3>
+        <div class="settings-row">
+          <input type="number" id="goalInput" min="500" step="10" />
+          <button class="btn primary" id="saveGoal">Save goal</button>
+        </div>
+        <p class="muted">A typical goal is 1,800–2,500 kcal depending on your body and activity level.</p>
+      </section>
+
+      <section class="card">
+        <h3>Food database — USDA API key (optional)</h3>
+        <p class="muted">
+          Online search uses USDA FoodData Central (Foundation, SR Legacy &amp; FNDDS — thousands of English-language
+          foods and dishes). Theeti ships with a shared demo key that is rate-limited; for smooth searching, grab your
+          own free key (takes ~1 minute) and paste it below.
+        </p>
+        <div class="settings-row">
+          <input type="text" id="apiKeyInput" placeholder="USDA API key (optional)" />
+          <button class="btn primary" id="saveApiKey">Save key</button>
+        </div>
+        <p class="muted">Free key: <a href="https://fdc.nal.usda.gov/api-key-signup.html" target="_blank" rel="noopener">fdc.nal.usda.gov/api-key-signup.html</a> · As for the built-in Theeti Essentials list, it always works offline, no key needed.</p>
+      </section>
+
+      <section class="card">
+        <h3>Your data</h3>
+        <div class="settings-row wrap">
+          <button class="btn" id="exportBtn">⬇ Export data (JSON)</button>
+          <button class="btn" id="sampleBtn">🧪 Load sample data</button>
+          <button class="btn danger" id="clearBtn">🗑 Erase all data</button>
+        </div>
+        <p class="muted">
+          Everything is stored privately in this browser (localStorage) — nothing is uploaded anywhere.
+          Export a JSON backup from time to time if the data matters to you.
+        </p>
+      </section>
+    </section>
+
+    <footer class="footer muted">Theeti v1.5 · Your Data Never Leaves This Browser</footer>
+  </main>
+  </div>
+
+  <script src="foods.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
