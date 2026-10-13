@@ -193,6 +193,7 @@ function searchEssentialFoods(q) {
       servingQty: f.serving || 0,
       pieceGrams: f.pieceGrams || 0,
       pieceName: f.pieceName || "piece",
+      liquid: !!f.liquid,
       src: "theeti",
     }));
 }
@@ -311,9 +312,16 @@ function selectSuggestion(i) {
   let amountText;
   if (item.pieceGrams) {
     pieceUnit = { grams: item.pieceGrams, name: item.pieceName || "piece" };
-    $("#fUnit").value = "pcs";
-    $("#fQuantity").value = 1;
-    amountText = "1 " + pieceUnit.name + " ≈ " + pieceUnit.grams + " g";
+    if (item.liquid) {
+      // liquids are measured in mL (1 mL ≈ 1 g, so the math stays exact)
+      $("#fUnit").value = "ml";
+      $("#fQuantity").value = item.pieceGrams;
+      amountText = item.pieceGrams + " mL " + pieceUnit.name;
+    } else {
+      $("#fUnit").value = "pcs";
+      $("#fQuantity").value = 1;
+      amountText = "1 " + pieceUnit.name + " ≈ " + pieceUnit.grams + " g";
+    }
   } else {
     $("#fUnit").value = "g";
     $("#fQuantity").value = item.servingQty > 0 ? Math.round(item.servingQty) : 100;
@@ -479,7 +487,33 @@ function renderAnalytics() {
 
   drawBarChart($("#barChart"), lastNDays(14), goal);
   drawDonutChart($("#donutChart"));
+  renderMacroCounters();
   renderTopFoods();
+}
+
+function renderMacroCounters() {
+  const today = totalsForDate(todayStr());
+  const sum7 = { protein: 0, carbs: 0, fat: 0 };
+  for (const d of lastNDays(7)) {
+    const t = totalsForDate(d);
+    sum7.protein += t.protein;
+    sum7.carbs += t.carbs;
+    sum7.fat += t.fat;
+  }
+  const cards = [
+    { key: "protein", label: "Protein" },
+    { key: "carbs", label: "Carbs" },
+    { key: "fat", label: "Fat" },
+  ];
+  $("#macroCounters").innerHTML = cards
+    .map((c) =>
+      '<div class="mc-block ' + c.key + '">' +
+        '<span class="mc-label">' + c.label + "</span>" +
+        '<div class="mc-today">' + round1(today[c.key]) + " <small>g today</small></div>" +
+        '<div class="mc-avg">~' + round1(sum7[c.key] / 7) + " g/day · last 7 days</div>" +
+      "</div>"
+    )
+    .join("");
 }
 
 function drawBarChart(canvas, days, goal) {
@@ -754,9 +788,10 @@ function wireEvents() {
     if (!name || !calories || calories <= 0) return;
 
     const qRaw = Number($("#fQuantity").value) || 0;
-    const qtyGrams = $("#fUnit").value === "pcs" && pieceUnit
+    const mode = $("#fUnit").value;
+    const qtyGrams = mode === "pcs" && pieceUnit
       ? Math.round(qRaw * pieceUnit.grams)
-      : (qRaw || null);
+      : (qRaw || null); // g and mL both map 1:1 onto grams (1 mL ≈ 1 g)
 
     state.entries.push({
       id: uid(),
@@ -764,9 +799,11 @@ function wireEvents() {
       name: name,
       meal: $("#fMeal").value,
       quantity: qtyGrams,
-      qtyLabel: $("#fUnit").value === "pcs" && pieceUnit
+      qtyLabel: mode === "pcs" && pieceUnit
         ? $("#fQuantity").value + " " + pieceUnit.name
-        : null,
+        : mode === "ml"
+          ? $("#fQuantity").value + " mL" + (pieceUnit ? " " + pieceUnit.name : "")
+          : null,
       calories: calories,
       protein: Number($("#fProtein").value) || 0,
       carbs: Number($("#fCarbs").value) || 0,

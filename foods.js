@@ -281,6 +281,22 @@ const ESSENTIAL = [
   ["Besan laddu", 400, 7, 50, 19, 40],
   ["Barfi", 400, 6, 50, 19, 30],
   ["Gajar halwa", 320, 5, 38, 17, 80],
+  // -- soya (high-protein picks) --
+  ["Soya chunks, dry", 345, 52, 33, 0.5, 50],
+  ["Soya chunks, cooked", 118, 17.5, 8, 0.5, 150],
+  ["Soya chaap sticks, dry", 345, 52, 33, 0.5, 50],
+  ["Soya chaap tikka (tandoori)", 170, 15, 5, 9, 120],
+  ["Soya chaap masala (curry)", 150, 11, 7, 9, 200],
+  ["Soya keema (mince curry)", 140, 16, 6, 6, 200],
+  ["Soya milk, sweetened", 60, 3.2, 8, 2, 250],
+  // -- extra paneer dishes --
+  ["Paneer tikka (tandoori, dry)", 195, 18, 3, 12, 150],
+  ["Kadhai paneer", 195, 8, 8, 14, 200],
+  ["Paneer bhurji", 165, 11, 5, 12, 150],
+  ["Chili paneer", 200, 9, 10, 13, 150],
+  ["Paneer pakora", 320, 9, 24, 21, 80],
+  ["Paneer do pyaza", 190, 7.5, 8, 14, 200],
+  ["Paneer lababdar", 215, 7, 9, 17, 200],
 ];
 
 window.THEETI_FOODS = ESSENTIAL.map(function (r) {
@@ -390,6 +406,18 @@ const PIECE_UNITS = {
   "Sushi roll": [170, "roll"],
   "Burrito": [220, "burrito"],
   "Sandwich, turkey & cheese": [200, "sandwich"],
+  "Soya chunks, cooked": [150, "katori"],
+  "Soya chaap tikka (tandoori)": [120, "stick"],
+  "Soya chaap masala (curry)": [200, "katori"],
+  "Soya keema (mince curry)": [200, "katori"],
+  "Soya milk, sweetened": [250, "glass"],
+  "Paneer tikka (tandoori, dry)": [30, "piece"],
+  "Kadhai paneer": [200, "katori"],
+  "Paneer bhurji": [150, "katori"],
+  "Chili paneer": [150, "plate"],
+  "Paneer pakora": [40, "pakora"],
+  "Paneer do pyaza": [200, "katori"],
+  "Paneer lababdar": [200, "katori"],
 };
 
 for (const f of window.THEETI_FOODS) {
@@ -397,5 +425,7 @@ for (const f of window.THEETI_FOODS) {
   if (p) {
     f.pieceGrams = p[0];
     f.pieceName = p[1];
+    // glasses, cans and bottles are liquids → measure in mL
+    f.liquid = ["glass", "can", "bottle"].includes(p[1]);
   }
 }

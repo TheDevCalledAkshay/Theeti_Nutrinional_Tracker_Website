@@ -240,6 +240,19 @@ body {
 .legend .swatch { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
 
 .top-foods { margin: 0; padding-left: 20px; }
+
+/* ---------- macro counters ---------- */
+.macro-counters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mc-block {
+  border: 1px solid var(--border); border-top: 4px solid var(--protein);
+  border-radius: 12px; padding: 14px; background: #fbfdfe;
+}
+.mc-block.carbs { border-top-color: var(--carbs); }
+.mc-block.fat { border-top-color: var(--fat); }
+.mc-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.mc-today { font-size: 1.5rem; font-weight: 800; margin: 4px 0 2px; }
+.mc-today small { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+.mc-avg { font-size: 0.82rem; color: var(--muted); }
 .top-foods li { padding: 7px 0; border-bottom: 1px dashed var(--border); }
 .top-foods li:last-child { border-bottom: none; }
 .top-foods .muted { margin-left: 8px; }
